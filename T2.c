@@ -7,19 +7,25 @@
 // Qual o melhor método para não ir para o caminho errado;
 // Começar em ponto especifico;
 
-typedef struct {
-  int num_vertices;
-  int matriz_adj[MAX_vet][MAX_vet]; // Estrutura do grafo;
-} Grafo;
 
-typedef struct {
+typedef struct coordenada{
   int linha;
   int coluna;
-} Coordenada; // struct para especificar o ponto de inicio e fim do labirinto;
+} Coordenada; // Struct para especificar o ponto de inicio e fim do labirinto;
 
-// criando estruturas para fila para utilizar o metodo BFS;
+typedef struct {
+  int num_vertices;
+  int matriz_ver [MAX_vet][MAX_vet]; // Estrutura do grafo;
+  Coordenada coordenada_inicio;
+  Coordenada coordenada_fim; // Coordenada de E e S;
+
+  Coordenada anterior;
+  Coordenada superior;
+} Grafo;
+
+// Criando estruturas para fila para utilizar o metodo BFS;
 typedef struct no {
-  int item;
+  int vertice;
   struct no *proximo;
 } No;
 
@@ -30,53 +36,70 @@ typedef struct fila {
 
 // Função que faz a leitura do  arquivo e cria a matriz de adjacencia;
 // é nessesario utilizar debugger para analisar essa função;
-void iniciar_matriz_adjacencia(Grafo *grafo, FILE *arq) {
+void verificacao_vertice(Grafo *grafo, FILE *arq) {
   char caractere;
   int linha = 0, coluna = 0;
+  grafo->num_vertices = 0;
   Coordenada coordenada_inicio;
   Coordenada coordenada_fim;
 
   while ((caractere = fgetc(arq)) != EOF) {
-    if (caractere != '\n') {
       if (caractere == 'E' || caractere == 'S' || caractere == '0') {
-        grafo->matriz_adj[linha][coluna] = 1;
+        grafo->matriz_ver[linha][coluna] = 1;
         coluna++;
         if (caractere == 'E') {
-          coordenada_inicio.linha = linha;
-          coordenada_inicio.coluna = coluna;
+          grafo->coordenada_inicio.linha = linha;
+          grafo->coordenada_inicio.coluna = coluna;
         }
         if (caractere == 'S') {
-          coordenada_fim.linha = linha;
-          coordenada_fim.coluna = coluna;
+          grafo->coordenada_fim.linha = linha;
+          grafo->coordenada_fim.coluna = coluna;
         }
+        grafo->num_vertices++;
       } else if (caractere == 'X') {
-        grafo->matriz_adj[linha][coluna] = 0;
+        grafo->matriz_ver[linha][coluna] = 0;
         coluna++;
+
       } else {
         linha++;
         coluna = 0;
-      }
+            }
+        }
     }
-  }
-}
+
 
 void iniciar_fila(Fila *fila) {
   fila->inicio = NULL;
   fila->fim = NULL;
 }
 
-int lista_vazia(Fila *fila) { return (fila->inicio == NULL); }
+int lista_vazia(Fila *fila) {
+  return (fila->inicio == NULL);
+}
 
-void *inserir_V_fila(Fila *fila, int item) {}
-No *remover_V_fila(Fila *fila) {}
+void *inserir_V_fila(Fila *fila, int item) {
+  No *novo_no = (No *)malloc(sizeof(No));
+  if(lista_vazia(fila)){
+    fila->inicio = novo_no;
+    fila->fim = novo_no;
+    novo_no->proximo = NULL;
+  }else{
+    
+  }
+  
+}
+No *remover_V_fila(Fila *fila) {
+  
+}
 
 int main(void) {
 
   Grafo *labirinto;
 
-  FILE *arq = fopen("labirinto1.txt", "r");
+  FILE *arq = fopen("labirinto2.txt", "r");
   if (arq == NULL) {
     printf("Erro ao abrir o arquivo!!!\n");
+    return 1;
   } else {
     printf("Arquivo aberto para leitura!!!\n");
   }
@@ -88,7 +111,7 @@ int main(void) {
     return 1;
   }
 
-  iniciar_matriz_adjacencia(labirinto, arq);
+  verificacao_vertice(labirinto, arq);
 
   printf("Hello World\n");
 
