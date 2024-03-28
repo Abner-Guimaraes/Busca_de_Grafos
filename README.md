@@ -27,4 +27,4 @@ Este repositório contém uma implementação em C do algoritmo DFS (Busca em Pr
 
 ## Implementação:
 
-A implementação neste repositório demonstra como usar uma matriz de adjacência para representar um grafo e como aplicar o algoritmo DFS para percorrer o grafo e explorar sua estrutura em profundidade. Em vez de encontrar o caminho mais curto entre dois vértices, o algoritmo DFS busca explorar o grafo de forma abrangente, mergulhando profundamente em cada ramificação antes de retroceder. Isso é útil para identificar ciclos, componentes conectados e outras características do grafo. O código fornece uma implementação clara e eficiente do algoritmo DFS em linguagem C.
+A implementação neste repositório demonstra como usar uma matriz de adjacência para representar um grafo e como aplicar o algoritmo DFS para percorrer o grafo e explorar sua estrutura em profundidade.
