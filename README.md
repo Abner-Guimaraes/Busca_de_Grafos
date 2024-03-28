@@ -21,9 +21,10 @@ A implementação neste repositório demonstra como usar uma matriz de adjacênc
 
 Sinta-se à vontade para explorar o código e contribuir para melhorias!
 
-# Segundo código: A discutir
+# Segundo código: Algoritmo DFS com Matriz de adjacência
 
-Provavelmente um algorimo em matriz de adjacência só que com outro método, como por exemplo algoritmo de Dijkstra
+Este repositório contém uma implementação em C do algoritmo DFS (Busca em Profundidade) utilizando uma matriz de adjacência. Este algoritmo é uma abordagem eficaz para explorar grafos e encontrar soluções para problemas de conectividade, busca de caminhos e outras análises de grafos. Ao contrário da busca em largura (BFS), que explora níveis de vizinhança de forma sistemática, o DFS mergulha o mais fundo possível em um ramo do grafo antes de retroceder para explorar outros ramos. Isso o torna útil para tarefas como identificação de ciclos, componentes conectados e ordenação topológica. Esta implementação oferece uma maneira concisa e eficiente de realizar buscas em profundidade em grafos representados por uma matriz de adjacência em linguagem C.
 
+## Implementação:
 
-
+A implementação neste repositório demonstra como usar uma matriz de adjacência para representar um grafo e como aplicar o algoritmo DFS para percorrer o grafo e explorar sua estrutura em profundidade. Em vez de encontrar o caminho mais curto entre dois vértices, o algoritmo DFS busca explorar o grafo de forma abrangente, mergulhando profundamente em cada ramificação antes de retroceder. Isso é útil para identificar ciclos, componentes conectados e outras características do grafo. O código fornece uma implementação clara e eficiente do algoritmo DFS em linguagem C.
