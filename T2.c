@@ -7,7 +7,6 @@
 // Qual o melhor método para não ir para o caminho errado;
 // Começar em ponto especifico;
 
-
 typedef struct coordenada{
   int linha;
   int coluna;
@@ -15,7 +14,7 @@ typedef struct coordenada{
 
 typedef struct {
   int num_vertices;
-  int matriz_ver [MAX_vet][MAX_vet]; // Estrutura do grafo;
+  int matriz_ver[MAX_vet][MAX_vet]; // Estrutura do grafo;
   Coordenada coordenada_inicio;
   Coordenada coordenada_fim; // Coordenada de E e S;
 
@@ -78,18 +77,30 @@ int lista_vazia(Fila *fila) {
 }
 
 void *inserir_V_fila(Fila *fila, int item) {
-  No *novo_no = (No *)malloc(sizeof(No));
+  No *novo_no = (No *)malloc(sizeof(No)); //criação de um novo nó com vertice;
+
+  novo_no->proximo = NULL;
+  //novo_no->vertice = item; recebimento de vertice; como
+  
   if(lista_vazia(fila)){
     fila->inicio = novo_no;
     fila->fim = novo_no;
     novo_no->proximo = NULL;
   }else{
-    
+    fila->fim->proximo = novo_no;
+    novo_no->proximo = NULL;
+    fila->fim = novo_no;
   }
-  
 }
-No *remover_V_fila(Fila *fila) {
-  
+
+No *remover_V_fila(Fila *fila){
+  if(lista_vazia(fila)){
+    return NULL;
+  }else{
+    No *aux = fila->inicio;
+    fila->inicio = fila->inicio->proximo;
+    free(aux);
+  }
 }
 
 int main(void) {
