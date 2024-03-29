@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#define MAX_vet 5
+#define MAX_vet 10
 
 // Matriz de adjacencia com Busca de largura(BFS);
 // Qual o melhor método para não ir para o caminho errado;
