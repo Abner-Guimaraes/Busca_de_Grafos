@@ -148,6 +148,15 @@ int main(void) {
   inicializar_matriz_adjacencia(labirinto, labirinto->num_vertices);
   construir_matriz_adjacencia(labirinto, labirinto->matriz_ver);
 
+  for (int i = 0; i < MAX_vet; i++)
+  {
+    for (int j = 0; i < MAX_vet; i++)
+    {
+      printf("%d ", labirinto->matriz_adj[i][j]);
+    }
+    printf("\n");
+  }
+  
   printf("Hello World\n");
 
   free(labirinto);
