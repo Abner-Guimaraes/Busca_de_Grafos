@@ -14,6 +14,7 @@ typedef struct coordenada {
 
 typedef struct {
   int num_vertices;
+  int matriz_adj[MAX_vet][MAX_vet];
   int matriz_ver[MAX_vet][MAX_vet]; // Estrutura do grafo;
   Coordenada coordenada_inicio;
   Coordenada coordenada_fim; // Coordenada de E e S;
@@ -66,6 +67,30 @@ void verificacao_vertice(Grafo *grafo, FILE *arq) {
   }
 }
 
+
+void inicializar_matriz_adjacencia(Grafo *grafo, int num_vertices) {
+  grafo->num_vertices = num_vertices;
+
+  for (int i = 0; i < MAX_vet; i++) {
+    for (int j = 0; j < MAX_vet; j++) {
+      grafo->matriz_adj[i][j] = 0;
+    }
+  }
+}
+
+void construir_matriz_adjacencia(Grafo *grafo,
+                                 int matriz_ver[MAX_vet][MAX_vet]) {
+  for (int i = 0; i < MAX_vet; i++) {
+    for (int j = 0; j < MAX_vet; j++) {
+      if (matriz_ver[i][j] == 1) {
+        grafo->matriz_adj[i][j] = 1;
+        grafo->matriz_adj[j][i] = 1;
+      }
+    }
+  }
+}
+
+
 void iniciar_fila(Fila *fila) {
   fila->inicio = NULL;
   fila->fim = NULL;
@@ -104,7 +129,7 @@ int main(void) {
 
   Grafo *labirinto;
 
-  FILE *arq = fopen("labirinto2.txt", "r");
+  FILE *arq = fopen("Labirintos/labirinto2.txt", "r");
   if (arq == NULL) {
     printf("Erro ao abrir o arquivo!!!\n");
     return 1;
@@ -120,6 +145,8 @@ int main(void) {
   }
 
   verificacao_vertice(labirinto, arq);
+  inicializar_matriz_adjacencia(labirinto, labirinto->num_vertices);
+  construir_matriz_adjacencia(labirinto, labirinto->matriz_ver);
 
   printf("Hello World\n");
 
