@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#define MAX_vet 10
+#define MAX_vet 5
 
 // Matriz de adjacencia com Busca de largura(BFS);
 // Qual o melhor método para não ir para o caminho errado;
@@ -14,8 +14,8 @@ typedef struct coordenada {
 
 typedef struct {
   int num_vertices;
-  int matriz_adj[MAX_vet][MAX_vet];
-  int matriz_ver[MAX_vet][MAX_vet]; // Estrutura do grafo;
+  int matriz_adj[MAX_vet][MAX_vet]; // Estrutura do grafo;
+  int matriz_ver[MAX_vet][MAX_vet]; // Matriz de vertices;
   Coordenada coordenada_inicio;
   Coordenada coordenada_fim; // Coordenada de E e S;
 
@@ -25,7 +25,8 @@ typedef struct {
 
 // Criando estruturas para fila para utilizar o metodo BFS;
 typedef struct no {
-  int vertice;
+  int vertice_linha;
+  int vertice_coluna;
   struct no *proximo;
 } No;
 
@@ -67,7 +68,6 @@ void verificacao_vertice(Grafo *grafo, FILE *arq) {
   }
 }
 
-
 void inicializar_matriz_adjacencia(Grafo *grafo, int num_vertices) {
   grafo->num_vertices = num_vertices;
 
@@ -78,60 +78,56 @@ void inicializar_matriz_adjacencia(Grafo *grafo, int num_vertices) {
   }
 }
 
-
-
-
-
-
 void construir_matriz_adjacencia(int num_vertices, Coordenada *listaVertice) {
 
   int matriz_adj[num_vertices][num_vertices];
   for (int i = 0; i < num_vertices; i++) {
     for (int j = 0; j < num_vertices; j++) {
-        
-        if(&listaVertice[i] == &listaVertice[j]){
-          matriz_adj[i][j] = 0;
-        }else{
-          //verifica se conectado em cima
-          if(listaVertice[j].linha - 1 == listaVertice[i].linha && listaVertice[j].coluna == listaVertice[i].coluna){
-            matriz_adj[i][j] = 1;
-          } 
-          //verifica se conectado em baixo
-          else if(listaVertice[j].linha + 1 == listaVertice[i].linha && listaVertice[j].coluna == listaVertice[i].coluna){
-            matriz_adj[i][j] = 1;
-          } 
-          //verifica se conectado na direita
-          else if(listaVertice[j].coluna + 1 == listaVertice[i].coluna && listaVertice[j].linha == listaVertice[i].linha){
-            matriz_adj[i][j] = 1;
 
-          } 
-          //verifica se conectado na esquerda
-          else if(listaVertice[j].coluna - 1 == listaVertice[i].coluna && listaVertice[j].linha == listaVertice[i].linha){
-            matriz_adj[i][j] = 1;
-          }else{
-            matriz_adj[i][j] = 0;
-          }
-          
+      if (&listaVertice[i] == &listaVertice[j]) {
+        matriz_adj[i][j] = 0;
+      } else {
+        // verifica se conectado em cima
+        if (listaVertice[j].linha - 1 == listaVertice[i].linha &&
+            listaVertice[j].coluna == listaVertice[i].coluna) {
+          matriz_adj[i][j] = 1;
         }
+        // verifica se conectado em baixo
+        else if (listaVertice[j].linha + 1 == listaVertice[i].linha &&
+                 listaVertice[j].coluna == listaVertice[i].coluna) {
+          matriz_adj[i][j] = 1;
+        }
+        // verifica se conectado na direita
+        else if (listaVertice[j].coluna + 1 == listaVertice[i].coluna &&
+                 listaVertice[j].linha == listaVertice[i].linha) {
+          matriz_adj[i][j] = 1;
+
+        }
+        // verifica se conectado na esquerda
+        else if (listaVertice[j].coluna - 1 == listaVertice[i].coluna &&
+                 listaVertice[j].linha == listaVertice[i].linha) {
+          matriz_adj[i][j] = 1;
+        } else {
+          matriz_adj[i][j] = 0;
+        }
+      }
     }
   }
   for (int i = 0; i < num_vertices; i++) {
     for (int j = 0; j < num_vertices; j++) {
-        printf("%d ",matriz_adj[i][j]);
+      printf("%d ", matriz_adj[i][j]);
     }
     printf("\n");
   }
-  
 }
 
-
-void criar_listaVertice(Grafo *grafo){
+void criar_listaVertice(Grafo *grafo) {
   int num_vertices = grafo->num_vertices;
   Coordenada listaVertices[num_vertices];
   int indexVertices = 0;
   for (int i = 0; i < MAX_vet; i++) {
     for (int j = 0; j < MAX_vet; j++) {
-      if(grafo->matriz_ver[i][j] == 1){
+      if (grafo->matriz_ver[i][j] == 1) {
         listaVertices[indexVertices].linha = i;
         listaVertices[indexVertices].coluna = j;
         indexVertices++;
@@ -141,19 +137,21 @@ void criar_listaVertice(Grafo *grafo){
   construir_matriz_adjacencia(num_vertices, listaVertices);
 }
 
-
 void iniciar_fila(Fila *fila) {
   fila->inicio = NULL;
   fila->fim = NULL;
 }
 
-int lista_vazia(Fila *fila) { return (fila->inicio == NULL); }
+int lista_vazia(Fila *fila) {
+  return (fila->inicio == NULL);
+}
 
-void *inserir_V_fila(Fila *fila, int item) {
+void *inserir_V_fila(Fila *fila, int vertice_linha, int vertice_coluna) {
   No *novo_no = (No *)malloc(sizeof(No)); // criação de um novo nó com vertice;
 
   novo_no->proximo = NULL;
-  // novo_no->vertice = item; recebimento de vertice;
+  // novo_no->vertice_linha = item; recebimento de vertice linha;
+  // novo_no->vertice_coluna = item; recebimento de vertice coluna;
 
   if (lista_vazia(fila)) {
     fila->inicio = novo_no;
@@ -176,11 +174,25 @@ No *remover_V_fila(Fila *fila) {
   }
 }
 
+int BFS_Busca_largura(Fila *fila, Grafo *grafo) {
+  int vetor_no [MAX_vet];
+  
+  iniciar_fila(fila); //Começa a fila vazia
+  
+  inserir_V_fila(fila, grafo->coordenada_inicio.linha, grafo->coordenada_inicio.coluna); //Coloca a coordenada de E;
+
+  while (!lista_vazia(fila)){
+
+    
+    
+  }
+}
+
 int main(void) {
 
   Grafo *labirinto;
 
-  FILE *arq = fopen("Labirintos/labirinto1.txt", "r");
+  FILE *arq = fopen("labirinto1.txt", "r");
   if (arq == NULL) {
     printf("Erro ao abrir o arquivo!!!\n");
     return 1;
@@ -196,11 +208,20 @@ int main(void) {
   }
 
   verificacao_vertice(labirinto, arq);
+  
+//Imprimindo o vetor de vertices;
+  for (int i = 0; i < MAX_vet; i++) {
+    for (int j = 0; j < MAX_vet; j++) {
+      printf("%d ", labirinto->matriz_ver[i][j]);
+    }
+    printf("\n");
+  }
+  printf("\n");
+  //Imprimindo o vetor de vertices;
+
   inicializar_matriz_adjacencia(labirinto, labirinto->num_vertices);
   criar_listaVertice(labirinto);
 
-  
-  
   printf("Hello World\n");
 
   free(labirinto);
