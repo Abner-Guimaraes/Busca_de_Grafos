@@ -71,7 +71,7 @@ void imprimir(No *topo)
     
 }
 
-
+//
 /* void imprimir(No *topo)
 {
     if (topo == NULL)
@@ -146,20 +146,20 @@ void construir_matriz_adjacencia(Grafo *grafo) {
       if (&grafo->listaVertice[i] == &grafo->listaVertice[j]) {
         grafo->matriz_adj[i][j] = 0;
       } else {
-        // verifica se conectado em cima
+        // verifica se conectado em cima;
         if (grafo->listaVertice[j].linha - 1 == grafo->listaVertice[i].linha && grafo->listaVertice[j].coluna == grafo->listaVertice[i].coluna) {
             grafo->matriz_adj[i][j] = 1;
         }
-        // verifica se conectado em baixo
+        // verifica se conectado em baixo;
         else if (grafo->listaVertice[j].linha + 1 == grafo->listaVertice[i].linha && grafo->listaVertice[j].coluna == grafo->listaVertice[i].coluna) {
           grafo->matriz_adj[i][j] = 1;
         }
-        // verifica se conectado na direita
+        // verifica se conectado na direita;
         else if (grafo->listaVertice[j].coluna + 1 == grafo->listaVertice[i].coluna && grafo->listaVertice[j].linha == grafo->listaVertice[i].linha) {
           grafo->matriz_adj[i][j] = 1;
 
         }
-        // verifica se conectado na esquerda
+        // verifica se conectado na esquerda;
         else if (grafo->listaVertice[j].coluna - 1 == grafo->listaVertice[i].coluna && grafo->listaVertice[j].linha == grafo->listaVertice[i].linha) {
           grafo->matriz_adj[i][j] = 1;
         } else {
@@ -273,7 +273,7 @@ No *remover_V_fila(Fila *fila) {
 int BFS_Busca_largura(Fila *fila, Grafo *grafo) {
   int vetor_no [MAX_vet];
   
-  iniciar_fila(fila); //Começa a fila vazia
+  iniciar_fila(fila); //Começa a fila vazia;
   
   inserir_V_fila(fila, grafo->coordenada_inicio.linha, grafo->coordenada_inicio.coluna); //Coloca a coordenada de E;
 

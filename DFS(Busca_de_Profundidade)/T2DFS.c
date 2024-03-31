@@ -71,7 +71,7 @@ void imprimir(No *topo)
     
 }
 
-
+//
 /* void imprimir(No *topo)
 {
     if (topo == NULL)
