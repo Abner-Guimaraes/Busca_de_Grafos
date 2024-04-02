@@ -7,9 +7,18 @@
 #define CINZA 1
 #define PRETO 2
 
-// Matriz de adjacencia com Busca de largura(BFS) e Busca em Profundidade (DFS);
-// Qual o melhor método para não ir para o caminho errado;
-// Começar em ponto especifico;
+/*+-----------------------------------------------------------+
+ | UNIFAL – Universidade Federal de Alfenas.                   |
+ | BACHARELADO EM CIENCIA DA COMPUTACAO.                       |
+ | Trabalho: Busca de Grafos                                   |
+ | Disciplina: Algoritmos e Estrutura de Dados II – Pratica    |
+ | Professor: Iago Augusto Carvalho                            |
+ | Aluno(s): Abner Gomes Guimarães - Felipe Araújo Correia     |
+ | Diogo da Silva Moreira - Gustavo Marcelino Izidoro          |
+ | Marcelo Bernardino da Silva Junior - Barbara Lima Marques   |
+ | Data: 01/04/2023                                            |
+ +-------------------------------------------------------------+
+*/
 
 typedef struct coordenada {
   int linha;
@@ -70,25 +79,6 @@ void imprimir(No *topo)
     printf("\n");
     
 }
-
-//
-/* void imprimir(No *topo)
-{
-    if (topo == NULL)
-    {
-        printf("pilha vazia");
-        return;
-    }
-
-    
-    while (topo != NULL)
-    {
-        printf("%d,%d", topo->vertice_linha, topo->vertice_coluna);
-        topo = topo->proximo;
-        if (topo != NULL)
-            printf("\n");
-    }
-} */
 
 // Função que faz a leitura do  arquivo e cria a matriz de adjacencia;
 // é necessário utilizar debugger para analisar essa função;
@@ -222,67 +212,11 @@ void profundidade(Grafo *grafo){
     cor[u] = BRANCO;
   }
 
-  for (u = grafo->coordenada_inicio.linha; u < num_vertices; u++)
-  {
-    if(cor[u] == BRANCO){
+  u = grafo->coordenada_inicio.linha;
       visitaP(grafo, u, cor, caminho);
-    }
-  }
-  
 }
-
-
-
-void iniciar_fila(Fila *fila) {
-  fila->inicio = NULL;
-  fila->fim = NULL;
-}
-
-int lista_vazia(Fila *fila) {
-  return (fila->inicio == NULL);
-}
-
-void *inserir_V_fila(Fila *fila, int vertice_linha, int vertice_coluna) {
-  No *novo_no = (No *)malloc(sizeof(No)); // criação de um novo nó com vertice;
-
-  novo_no->proximo = NULL;
-  // novo_no->vertice_linha = item; recebimento de vertice linha;
-  // novo_no->vertice_coluna = item; recebimento de vertice coluna;
-
-  if (lista_vazia(fila)) {
-    fila->inicio = novo_no;
-    fila->fim = novo_no;
-    novo_no->proximo = NULL;
-  } else {
-    fila->fim->proximo = novo_no;
-    novo_no->proximo = NULL;
-    fila->fim = novo_no;
-  }
-}
-
-No *remover_V_fila(Fila *fila) {
-  if (lista_vazia(fila)) {
-    return NULL;
-  } else {
-    No *aux = fila->inicio;
-    fila->inicio = fila->inicio->proximo;
-    free(aux);
-  }
-}
-
-int BFS_Busca_largura(Fila *fila, Grafo *grafo) {
-  int vetor_no [MAX_vet];
-  
-  iniciar_fila(fila); //Começa a fila vazia
-  
-  inserir_V_fila(fila, grafo->coordenada_inicio.linha, grafo->coordenada_inicio.coluna); //Coloca a coordenada de E;
-
-  while (!lista_vazia(fila)){
 
     
-    
-  }
-}
 
 int main(void) {
 
@@ -311,7 +245,7 @@ int main(void) {
   criar_listaVertice(labirinto);
   profundidade(labirinto);
 
-  //printf("Hello World\n");
+  
 
   free(labirinto);
   fclose(arq);

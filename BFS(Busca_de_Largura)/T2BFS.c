@@ -7,9 +7,18 @@
 #define CINZA 1
 #define PRETO 2
 
-// Matriz de adjacencia com Busca de largura(BFS) e Busca em Profundidade (DFS);
-// Qual o melhor método para não ir para o caminho errado;
-// Começar em ponto especifico;
+/*+-----------------------------------------------------------+
+ | UNIFAL – Universidade Federal de Alfenas.                   |
+ | BACHARELADO EM CIENCIA DA COMPUTACAO.                       |
+ | Trabalho: Busca de Grafos                                   |
+ | Disciplina: Algoritmos e Estrutura de Dados II – Pratica    |
+ | Professor: Iago Augusto Carvalho                            |
+ | Aluno(s): Abner Gomes Guimarães - Felipe Araújo Correia     |
+ | Diogo da Silva Moreira - Gustavo Marcelino Izidoro          |
+ | Marcelo Bernardino da Silva Junior - Barbara Lima Marques   |
+ | Data: 01/04/2023                                            |
+ +-------------------------------------------------------------+
+*/
 
 typedef struct coordenada {
   int linha;
@@ -66,29 +75,12 @@ void imprimir(No *topo)
     }
 
     imprimir(topo->proximo);    
-    printf("%d,%d", topo->vertice_linha, topo->vertice_coluna);
+    printf("%d,%d", topo->vertice_coluna, MAX_vet - 1 - topo->vertice_linha);
     printf("\n");
     
 }
 
-//
-/* void imprimir(No *topo)
-{
-    if (topo == NULL)
-    {
-        printf("pilha vazia");
-        return;
-    }
 
-    
-    while (topo != NULL)
-    {
-        printf("%d,%d", topo->vertice_linha, topo->vertice_coluna);
-        topo = topo->proximo;
-        if (topo != NULL)
-            printf("\n");
-    }
-} */
 
 // Função que faz a leitura do  arquivo e cria a matriz de adjacencia;
 // é necessário utilizar debugger para analisar essa função;
@@ -187,108 +179,91 @@ void criar_listaVertice(Grafo *grafo) {
   construir_matriz_adjacencia(grafo);
 }
 
-bool visitaP(Grafo *grafo, int u, int cor[], No *caminho) {
-    cor[u] = CINZA;
-
-
-    No *vertice = malloc(sizeof(No));
-    vertice->vertice_linha = grafo->listaVertice[u].linha;
-    vertice->vertice_coluna = grafo->listaVertice[u].coluna;
-    inserir_pilha(&caminho, vertice);
-
-    if(grafo->listaVertice[u].linha == grafo->coordenada_fim.linha && grafo->listaVertice[u].coluna == grafo->coordenada_fim.coluna){
-      imprimir(caminho);
-      return true;
-    }
-    
-    for (int v = 0; v < grafo->num_vertices; v++) {
-        if (grafo->matriz_adj[u][v] == 1 && cor[v] == BRANCO) {
-            visitaP(grafo, v, cor, caminho);
-        }
-    }
-
-    cor[u] = PRETO;
-
-    remover_pilha(&caminho);
-   
-}
-
-void profundidade(Grafo *grafo){
-  int num_vertices = grafo->num_vertices;
-  int cor[num_vertices];
-  No *caminho = NULL;
-  int u;
-  for(u = 0; u < num_vertices; u++){
-    cor[u] = BRANCO;
-  }
-
-  for (u = grafo->coordenada_inicio.linha; u < num_vertices; u++)
-  {
-    if(cor[u] == BRANCO){
-      visitaP(grafo, u, cor, caminho);
-    }
-  }
-  
-}
-
-
-
 void iniciar_fila(Fila *fila) {
   fila->inicio = NULL;
   fila->fim = NULL;
 }
 
-int lista_vazia(Fila *fila) {
-  return (fila->inicio == NULL);
-}
+void *inserir_V_fila(Fila *fila,int vertice) {
+  No *novo_vertice = (No*) malloc(sizeof(No));
+  novo_vertice->vertice_linha = vertice; 
 
-void *inserir_V_fila(Fila *fila, int vertice_linha, int vertice_coluna) {
-  No *novo_no = (No *)malloc(sizeof(No)); // criação de um novo nó com vertice;
-
-  novo_no->proximo = NULL;
-  // novo_no->vertice_linha = item; recebimento de vertice linha;
-  // novo_no->vertice_coluna = item; recebimento de vertice coluna;
-
-  if (lista_vazia(fila)) {
-    fila->inicio = novo_no;
-    fila->fim = novo_no;
-    novo_no->proximo = NULL;
+  if (fila->inicio == NULL) {
+    fila->inicio = novo_vertice;
+    fila->fim = novo_vertice;
+    novo_vertice->proximo = NULL;
   } else {
-    fila->fim->proximo = novo_no;
-    novo_no->proximo = NULL;
-    fila->fim = novo_no;
+    fila->fim->proximo = novo_vertice;
+    novo_vertice->proximo = NULL;
+    fila->fim = novo_vertice;
   }
 }
 
-No *remover_V_fila(Fila *fila) {
-  if (lista_vazia(fila)) {
-    return NULL;
+int remover_V_fila(Fila *fila) {
+  if (fila->inicio == NULL) {
+    return -1;
   } else {
     No *aux = fila->inicio;
     fila->inicio = fila->inicio->proximo;
+    return aux->vertice_linha;
     free(aux);
   }
 }
 
-int BFS_Busca_largura(Fila *fila, Grafo *grafo) {
-  int vetor_no [MAX_vet];
-  
-  iniciar_fila(fila); //Começa a fila vazia;
-  
-  inserir_V_fila(fila, grafo->coordenada_inicio.linha, grafo->coordenada_inicio.coluna); //Coloca a coordenada de E;
+bool visitaL(Grafo *grafo, int s, bool *explorados,int *distancia, Fila *fila) {
+    // Marca o vértice inicial como explorado e o adiciona à fila
+    explorados[s] = true;
+    distancia[s] = 0;
+    inserir_V_fila(fila, s);
 
-  while (!lista_vazia(fila)){
-
+    while (fila->inicio != NULL) {
+        // Remove o primeiro vértice da fila
+        int u = remover_V_fila(fila);
+        
+        // Percorre todos os vértices adjacentes a u
+        for (int v = 0; v < grafo->num_vertices; v++) {
+            // Verifica se v é adjacente a u e se ainda não foi exploradov
+            if (grafo->matriz_adj[u][v] && !explorados[v]) {
+                // Marca v como explorado e o adiciona à fila
+                explorados[v] = true;
+                distancia[v] = distancia[u] + 1;
+                inserir_V_fila(fila, v);
+            }
+        }
+    }
     
-    
-  }
+     return true;
 }
+
+int BFS_Busca_largura(Grafo *grafo) {
+    bool explorados[grafo->num_vertices];
+    int distancia[grafo->num_vertices];
+    Fila fila;
+    iniciar_fila(&fila);
+
+    // Inicializa todos os vértices como não explorados
+    for (int u = 0; u < grafo->num_vertices; u++) {
+        explorados[u] = false;
+        distancia[u] = -1;
+    }
+
+    // Começa a busca em largura a partir do vértice de origem
+    int origem = grafo->coordenada_inicio.linha;
+    visitaL(grafo, origem, explorados,distancia, &fila);
+    
+    for (int i = 0; i < grafo->num_vertices; i++) {
+        if(distancia[i] >= distancia[i-1] || i == 0)
+            printf("%d,%d\n", grafo->listaVertice[i].coluna, MAX_vet - 1 - grafo->listaVertice[i].linha);
+    }
+}
+
+
 
 int main(void) {
 
   Grafo *labirinto;
 
-  FILE *arq = fopen("Labirintos/labirinto1.txt", "r");
+  FILE *arq = fopen("labirinto1.txt", "r");
   if (arq == NULL) {
     printf("Erro ao abrir o arquivo!!!\n");
     return 1;
@@ -309,9 +284,9 @@ int main(void) {
 
   inicializar_matriz_adjacencia(labirinto, labirinto->num_vertices);
   criar_listaVertice(labirinto);
-  profundidade(labirinto);
+  BFS_Busca_largura(labirinto);
 
-  //printf("Hello World\n");
+  
 
   free(labirinto);
   fclose(arq);
