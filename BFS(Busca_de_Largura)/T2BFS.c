@@ -4,9 +4,6 @@
 #include <string.h>
 
 #define MAX_vet 10
-#define BRANCO 0
-#define CINZA 1
-#define PRETO 2
 
 /*+-----------------------------------------------------------+
  | UNIFAL – Universidade Federal de Alfenas.                   |
@@ -48,38 +45,6 @@ typedef struct fila {
   No *inicio;
   No *fim;
 } Fila;
-
-
-void inserir_pilha(No **topo, No *novo_no)
-{
-    novo_no->proximo = (*topo);
-    *topo = novo_no;
-}
-
-
-No *remover_pilha(No **topo)
-{
-    No *tmp = NULL;
-    if (*topo != NULL)
-    {
-        tmp = *topo;
-        (*topo) = (*(*topo)).proximo;
-    }
-    return tmp;
-}
-
-void imprimir(No *topo)
-{
-    if (topo == NULL)
-    {
-        return;
-    }
-
-    imprimir(topo->proximo);    
-    printf("%d,%d", topo->vertice_coluna, MAX_vet - 1 - topo->vertice_linha);
-    printf("\n");
-    
-}
 
 
 
@@ -236,7 +201,7 @@ bool visitaL(Grafo *grafo, int s, bool *explorados,int *distancia, Fila *fila) {
      return true;
 }
 
-int BFS_Busca_largura(Grafo *grafo) {
+void BFS_Busca_largura(Grafo *grafo) {
     bool explorados[grafo->num_vertices];
     int distancia[grafo->num_vertices];
     Fila fila;
