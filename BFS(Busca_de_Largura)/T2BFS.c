@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
+#include <string.h>
 
 #define MAX_vet 10
 #define BRANCO 0
@@ -263,7 +264,13 @@ int main(void) {
 
   Grafo *labirinto;
 
-  FILE *arq = fopen("labirinto1.txt", "r");
+   char filename[1000];
+  printf("Digite o nome do arquivo: ");
+  scanf("%s", filename);
+  strcat(filename, ".txt");
+  
+  FILE *arq = fopen(filename, "r");
+    
   if (arq == NULL) {
     printf("Erro ao abrir o arquivo!!!\n");
     return 1;

@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
+#include <string.h>
 
 #define MAX_vet 10
 #define BRANCO 0
@@ -75,7 +76,7 @@ void imprimir(No *topo)
     }
 
     imprimir(topo->proximo);    
-    printf("%d,%d", topo->vertice_linha, topo->vertice_coluna);
+   printf("%d,%d", topo->vertice_coluna, MAX_vet - 1 - topo->vertice_linha);
     printf("\n");
     
 }
@@ -222,7 +223,13 @@ int main(void) {
 
   Grafo *labirinto;
 
-  FILE *arq = fopen("Labirintos/labirinto1.txt", "r");
+ char filename[1000];
+  printf("Digite o nome do arquivo: ");
+  scanf("%s", filename);
+  strcat(filename, ".txt");
+  
+  FILE *arq = fopen(filename, "r");
+
   if (arq == NULL) {
     printf("Erro ao abrir o arquivo!!!\n");
     return 1;

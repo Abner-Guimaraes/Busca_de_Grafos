@@ -1,56 +1,13 @@
-# Organizando os arquivos no makefile
+all: T2DFS
 
-# Nome do projeto
-PROJ_NAME=T2
+T2DFS: main.o T2DFS.o
+	gcc -o T2DFS main.o T2DFS.o
 
-# Arquivos .c
-C_SOURCE=$(wildcard ./source/*.c)
+main.o: main.c T2DFS.h
+	gcc -o main.o main.c -c -W -Wall -ansi -pedantic
 
-# Arquivos .h
-H_SOURCE=$(wildcard ./source/*.h)
-
-# Arquivos objeto
-OBJ=$(subst .c,.o,$(subst source,objects,$(C_SOURCE)))
-
-# Compilador
-CC=gcc
-
-# Flags (opções) para o compilador
-CC_FLAGS=-c         \
-         -W         \
-         -Wall      \
-         -ansi      \
-         -pedantic
-
-# Comando utilizado como target do clean
-RM = rm -rf
-
-#########################
-# Compilação e linkagem #
-#########################
-all: objFolder $(PROJ_NAME)
-
-$(PROJ_NAME): $(OBJ)
-	@ echo 'Construindo o binário usando o linker GCC: $@'
-	$(CC) $^ -o $@
-	@ echo 'Binário pronto!: $@'
-	@ echo ' '
-
-./objects/%.o: ./source/%.c ./source/%.h
-	@ echo 'Construindo target usando o compilador GCC: $<'
-	$(CC) $< $(CC_FLAGS) -o $@
-	@ echo ' '
-
-./objects/main.o: ./source/main.c $(H_SOURCE)
-	@ echo 'Construindo target usando o compilador GCC: $<'
-	$(CC) $< $(CC_FLAGS) -o $@
-	@ echo ' '
-
-objFolder:
-	@ mkdir -p objects
+T2DFS.o: T2DFS.c T2DFS.h
+	gcc -o T2DFS.o T2DFS.c -c -W -Wall -ansi -pedantic
 
 clean:
-	@ $(RM) ./objects/*.o $(PROJ_NAME) *~
-	@ rmdir objects
-
-.PHONY: all clean
+	rm -rf *.o *~
